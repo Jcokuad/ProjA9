@@ -29,10 +29,10 @@ class CircularlyLinkedList {
             return sz == 0;
         }
         T& front() {
-            return head->elem; // Returns first element at head index
+            return tail->next->elem; // Returns first element at head index
         }
         const T& front() const {
-            return head->elem;
+            return tail->next->elem;
         }
         T& back() {
             return tail->elem; // return last element at tail index
@@ -96,7 +96,7 @@ class CircularlyLinkedList {
             // The original tail becomes the tail of the second half
             Node* tail_second = tail;
             // Rewire pointers to form two separate circular lists
-            tail_first->next = head
+            tail_first->next = head;
             // Clear destination lists first
             tail_second->next = head_second;
             // Assign the two halves
@@ -139,7 +139,7 @@ class CircularlyLinkedList {
             return *this;
         }
         CircularlyLinkedList(CircularlyLinkedList&& other) { // move constructor
-            swap(*this, other)
+            swap(*this, other);
         }
         CircularlyLinkedList& operator=(CircularlyLinkedList&& other) { // move assignment
             if (this != other) {

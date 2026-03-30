@@ -131,6 +131,7 @@ class SinglyLinkedList {
                 }
                 iterator& operator++() {
                     node_ptr = node_ptr->next;
+                    return *this;
                 }
                 iterator operator++(int) {
                     iterator temp(*this);

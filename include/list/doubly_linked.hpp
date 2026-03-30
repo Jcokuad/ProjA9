@@ -82,7 +82,7 @@ class DoublyLinkedList {
         }
         void concatenate(DoublyLinkedList& M) {
             // self-concat not allowed
-            if (this = &M) {
+            if (this == &M) {
                 return;
             }
             // nothing to add if M empty
@@ -158,16 +158,6 @@ class DoublyLinkedList {
             private:
                 const Node* node_ptr;
             public:
-                const_iterator(const Node* ptr = nullptr);
-                const T& operator*() const;
-                const T* operator->() const;
-                const_iterator& operator++();
-                const_iterator operator++(int);
-                const_iterator& operator--();
-                const_iterator operator--(int);
-                bool operator==(const const_iterator& other) const;
-                bool operator!=(const const_iterator& other) const;
-
                 const_iterator(const Node* ptr = nullptr) : node_ptr(ptr) {}
                 const T& operator*() const {
                     return node_ptr->elem;
