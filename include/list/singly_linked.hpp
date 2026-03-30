@@ -101,7 +101,19 @@ class SinglyLinkedList {
                 return;
             }
             // Traverse the list and reverse links one by one
-            Node* 
+            Node* prev = nullptr;
+            Node* curr = head;
+            Node* old = head;
+
+            while (curr != nullptr) {
+                Node* next = curr->next; // store the next node
+                curr->next = prev;
+                prev = curr;    // move the current and previous forward
+                curr = next;    
+            }
+
+            head = prev;    // head and tail are swapped 
+            tail = old;
         }
     public:
         class iterator {
@@ -110,44 +122,131 @@ class SinglyLinkedList {
                 Node* node_ptr;  // pointer to a node
             public:
                 // ToDo
-                iterator(Node* ptr = nullptr);
-                T& operator*() const;
-                T* operator->() const;
-                iterator& operator++();
-                iterator operator++(int);
-                bool operator==(iterator rhs) const;
-                bool operator!=(iterator rhs) const;
+                iterator(Node* ptr = nullptr) : node_ptr(ptr) {} 
+                T& operator*() const {
+                    return node_ptr->elem;
+                }
+                T* operator->() const {
+                    return &node_ptr->elem;
+                }
+                iterator& operator++() {
+                    node_ptr = node_ptr->next;
+                }
+                iterator operator++(int) {
+                    iterator temp(*this);
+                    ++(*this);
+                    return temp;
+                }
+                bool operator==(iterator rhs) const {
+                    return node_ptr == rhs.node_ptr;
+                }
+                bool operator!=(iterator rhs) const {
+                    return node_ptr != rhs.node_ptr;
+                }
         };
     public:
         class const_iterator {
             private:
                 Node* node_ptr;
             public:
-                const_iterator(Node* ptr = nullptr);
-                const T& operator*() const;
-                const T* operator->() const;
-                const_iterator& operator++();
-                const_iterator operator++(int);
-                bool operator==(const_iterator rhs) const;
-                bool operator!=(const_iterator rhs) const;
+                const_iterator(Node* ptr = nullptr) : node_ptr(ptr) {}
+                const T& operator*() const {
+                    return node_ptr->elem;
+                }
+                const T* operator->() const {
+                    return &node_ptr->elem;
+                }
+                const_iterator& operator++() {
+                    node_ptr = node_ptr->next;
+                }
+                const_iterator operator++(int) {
+                    iterator temp(*this);
+                    ++(*this);
+                    return temp;
+                }
+                bool operator==(const_iterator rhs) const {
+                    return node_ptr == rhs.node_ptr;
+                }
+                bool operator!=(const_iterator rhs) const {
+                    return node_ptr != rhs.node_ptr;
+                }
         };
     public:
-        iterator begin();
-        const_iterator begin() const;
-        iterator end();
-        const_iterator end() const;
-        iterator insert_after(iterator it, const T& elem);
-        iterator erase_after(iterator it);
+        iterator begin() {
+            return iterator(head);
+        }
+        const_iterator begin() const {
+            return const_iterator(head);
+        }
+        iterator end() {
+            return iterator(nullptr);
+        }
+        const_iterator end() const {
+            return const_iterator(nullptr);
+        }
+        iterator insert_after(iterator it, const T& elem) {
+            it.node_ptr->next = new Node(elem, it.node_ptr->next);
+            // newest node becomes tail
+            if (tail == it.node_ptr) {
+                tail = it.node_ptr->next;
+            }
+            sz++;
+            return iterator(it.node_ptr->next);
+        }
+        iterator erase_after(iterator it) {
+            Node* after = it.node_ptr->next;
+            // old tail is removed
+            if (tail == after) {
+                tail = it.node_ptr;
+            }
+            it.node_ptr->next = after->next;
+            delete after;
+            sz--;
+            // return iterator to what newly follows the original iterator
+            return iterator(it.node_ptr->next);
+        }
+    
+    // RULE-OF-FIVE Implementation
     private:
-        void clone(const SinglyLinkedList& other);
+        void clone(const SinglyLinkedList& other) {
+            for (T elem : other) {  // add each element of other to the list
+                push_back(elem);
+            }
+        }
     public:
-        friend void swap(SinglyLinkedList& a, SinglyLinkedList& b);
-        void clear();
-        SinglyLinkedList(const SinglyLinkedList& other);
-        SinglyLinkedList& operator=(const SinglyLinkedList& other);
-        SinglyLinkedList(SinglyLinkedList&& other);
-        SinglyLinkedList& operator=(SinglyLinkedList&& other);
-        ~SinglyLinkedList();
+        // non-member function to swap two lists
+        friend void swap(SinglyLinkedList& a, SinglyLinkedList& b) {
+            std::swap(a.sz, b.sz);
+            std::swap(a.head, b.head);
+            std::swap(a.tail, b.tail);
+        }
+        void clear() {
+            while (sz > 0) {
+                pop_front();
+            }
+        }
+        SinglyLinkedList(const SinglyLinkedList& other) {  // copy constructor
+            clone(other);
+        }
+        SinglyLinkedList& operator=(const SinglyLinkedList& other) { // copy assignment
+            if (this != &other) {
+                clear();
+                clone(other);
+            }
+            return *this;
+        }
+        SinglyLinkedList(SinglyLinkedList&& other) {  // move constructor
+            swap(*this, other);
+        }
+        SinglyLinkedList& operator=(SinglyLinkedList&& other) { // move assignment
+            if (this != &other) {
+                swap(*this, other);
+            }
+            return *this;
+        }
+        ~SinglyLinkedList() { // destructor
+            clear();
+        }
 };
 
 } // namespace dsac::list
