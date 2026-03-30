@@ -38,7 +38,17 @@ class DoublyLinkedList {
         void push_back(const T& elem);
         void pop_front();
         void pop_back();
-        void concatenate(DoublyLinkedList& M);
+        void concatenate(DoublyLinkedList& M) {
+            // self-concat not allowed
+            
+            // nothing to add if M empty
+            
+            // Case 1: current list (*this) is empty
+            
+            // Case 2: both lists are non-empty
+
+            // Reset M to empty using its OWN sentinels
+        }
     public:
         class iterator {
             friend class DoublyLinkedList;

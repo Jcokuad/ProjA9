@@ -66,8 +66,43 @@ class SinglyLinkedList {
             tail = newest;
             sz++;
         }
-        void concatenate(SinglyLinkedList& M);
-        void reverse();
+        void concatenate(SinglyLinkedList& M) {
+            // self-concatenation: do nothing
+            if (this == &M) {
+                return;
+            }
+            // nothing to add if M is empty
+            if (M.empty()) {
+                return;
+            }
+            // current list is empty: adopt M in complete
+            if (empty()) {
+                head = M.head;
+                tail = M.tail;
+                sz = M.sz;
+            }
+            // general splice: tail -> M.head, then adopt M.tail
+            else {
+                tail->next = M.head;
+                tail = M.tail;
+                sz += M.sz;
+            }
+            // reset M to empty state
+            M.head = nullptr;
+            M.tail = nullptr;
+            M.sz = 0;
+        }
+
+        // Reverse the singly linked list in-place, using O(1) extra space.
+        // After this, head and tail are swapped, and all links are reversed.
+        void reverse() {
+            // nothing to do for empty or single-node list
+            if (sz <= 1) {
+                return;
+            }
+            // Traverse the list and reverse links one by one
+            Node* 
+        }
     public:
         class iterator {
             friend class SinglyLinkedList;
