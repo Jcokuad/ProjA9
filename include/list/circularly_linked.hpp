@@ -90,7 +90,7 @@ class CircularlyLinkedList {
             for (int i = 1; i < half; i++) {
                 tail_first = tail_first->next;
             }
-            
+
             // The node after firstTail is the head of the second half
 
             // The original tail becomes the tail of the second half
@@ -105,16 +105,59 @@ class CircularlyLinkedList {
         }
 
     private:
-        void clone(const CircularlyLinkedList& other);
+        void clone(const CircularlyLinkedList& other) {
+            Node* walk = other.tail;
+            for (int i{0}; i < other.size(); i++) {
+                push_back(walk->next->elem);
+                walk = walk->next;
+            }
+        }
     public:
-        friend void swap(CircularlyLinkedList& a, CircularlyLinkedList& b);
-        void clear();
-        CircularlyLinkedList(const CircularlyLinkedList& other);
-        CircularlyLinkedList& operator=(const CircularlyLinkedList& other);
-        CircularlyLinkedList(CircularlyLinkedList&& other);
-        CircularlyLinkedList& operator=(CircularlyLinkedList&& other);
-        ~CircularlyLinkedList();
-        void print();
+        friend void swap(CircularlyLinkedList& a, CircularlyLinkedList& b) {
+            std::swap(a.sz, b.sz);
+            std::swap(a.tail, b.tail);
+        }
+        void clear() {
+            while (sz > 0) {
+                pop_front();
+            }
+        }
+        CircularlyLinkedList(const CircularlyLinkedList& other) { // copy constructor
+            clone(other);
+        }
+        CircularlyLinkedList& operator=(const CircularlyLinkedList& other) { // copy assignment
+            if (this != &other) {
+                clear();
+                clone(other);
+            }
+            return *this;
+        }
+        CircularlyLinkedList(CircularlyLinkedList&& other) { // move constructor
+            swap(*this, other)
+        }
+        CircularlyLinkedList& operator=(CircularlyLinkedList&& other) { // move assignment
+            if (this != other) {
+                swap(*this, other);
+            }
+            return *this;
+        }
+        ~CircularlyLinkedList() {  // destructor
+            clear();
+        }
+        void print() {
+            if (tail == nullptr) {
+                std::cout << "List is empty.\n";
+                return;
+            }
+
+            Node* curr = tail->next;
+            do {
+                std::cout << curr->elem << " ";
+                curr = curr->next;
+            } while (curr != tail->next);
+
+            std::cout << std::endl;
+        }
 };
 
 }  // namespace dsac::list
