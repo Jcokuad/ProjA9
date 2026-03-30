@@ -92,16 +92,22 @@ class CircularlyLinkedList {
             }
 
             // The node after firstTail is the head of the second half
-
+            Node* head_second = tail_first->next;
             // The original tail becomes the tail of the second half
-
+            Node* tail_second = tail;
             // Rewire pointers to form two separate circular lists
-            
+            tail_first->next = head
             // Clear destination lists first
-            
+            tail_second->next = head_second;
             // Assign the two halves
+            A.tail = tail_first;
+            A.sz = half;
 
+            B.tail = tail_second;
+            B.sz = half;
             // Original list becomes empty
+            tail = nullptr;
+            sz = 0;
         }
 
     private:
