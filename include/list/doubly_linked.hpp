@@ -1,6 +1,8 @@
 #pragma once
 
 #include <utility>     // provides std::swap
+#include <stdexcept>  
+#include <iostream>
 
 namespace dsac::list {
 //akin to std::list
@@ -75,9 +77,15 @@ class DoublyLinkedList {
             insert_before(elem, trailer);
         }
         void pop_front() {
+            if (empty()) {
+                throw std::out_of_range("pop_front on empty list");
+            }
             erase(header->next);
         }
         void pop_back() {
+            if (empty()) {
+                throw std::out_of_range("pop_front on empty list");
+            }
             erase(trailer->prev);
         }
         void concatenate(DoublyLinkedList& M) {
@@ -143,7 +151,7 @@ class DoublyLinkedList {
                     return *this;
                 }
                 iterator operator--(int) {
-                    iterator temp(*temp);
+                    iterator temp(*this);
                     --(*this);
                     return temp;
                 }
@@ -167,9 +175,10 @@ class DoublyLinkedList {
                 }
                 const_iterator& operator++() {
                     node_ptr = node_ptr->next;
+                    return *this;
                 }
                 const_iterator operator++(int) {
-                    iterator temp(*this);
+                    const_iterator temp(*this);
                     ++(*this);
                     return temp;
                 }

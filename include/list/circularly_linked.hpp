@@ -1,6 +1,8 @@
 #pragma once
 
 #include <utility>     // provides std::swap
+#include <stdexcept>  
+#include <iostream>
 
 namespace dsac::list {
 
@@ -54,6 +56,9 @@ class CircularlyLinkedList {
             tail = tail->next;
         }
         void pop_front() {
+            if (empty()) {
+                throw std::out_of_range("pop_front on empty list");
+            }
             Node* head = tail->next;
             if (head == tail) { // if size == 1
                 tail = nullptr;
@@ -74,12 +79,15 @@ class CircularlyLinkedList {
         // A and B each point to one of the two halves.
         void splitEven(CircularlyLinkedList& A, CircularlyLinkedList& B) {
             // If the list is empty, both result lists should also be empty
+            A.clear();
+            B.clear();
+            
             if (empty()) {
                 return;
             }
             // splitEven is only valid for even-sized lists else throw exception
             if (sz % 2 != 0) {
-                throw std::runtime_error("splitEven only valid for even-sized lists");
+                throw std::invalid_argument("splitEven only valid for even-sized lists");
             }
             int half = sz / 2;
             // head is the first node in the circular list
@@ -142,7 +150,7 @@ class CircularlyLinkedList {
             swap(*this, other);
         }
         CircularlyLinkedList& operator=(CircularlyLinkedList&& other) { // move assignment
-            if (this != other) {
+            if (this != &other) {
                 swap(*this, other);
             }
             return *this;

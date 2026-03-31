@@ -1,6 +1,8 @@
 #pragma once
 
 #include <utility>     // provides std::swap
+#include <stdexcept>
+#include <iostream>
 
 namespace dsac::list {
 
@@ -48,6 +50,9 @@ class SinglyLinkedList {
             sz++;
         }
         void pop_front() {
+            if (empty()) {
+                throw std::out_of_range("pop_front on empty list");
+            }
             Node* old{head}; // old is the current head of the list
             head = head->next;
             delete old; 
@@ -159,9 +164,10 @@ class SinglyLinkedList {
                 }
                 const_iterator& operator++() {
                     node_ptr = node_ptr->next;
+                    return *this;
                 }
                 const_iterator operator++(int) {
-                    iterator temp(*this);
+                    const_iterator temp(*this);
                     ++(*this);
                     return temp;
                 }
@@ -186,6 +192,9 @@ class SinglyLinkedList {
             return const_iterator(nullptr);
         }
         iterator insert_after(iterator it, const T& elem) {
+            if (it.node_ptr == nullptr) {
+                throw std::out_of_range("Invalid iterator");
+            }
             it.node_ptr->next = new Node(elem, it.node_ptr->next);
             // newest node becomes tail
             if (tail == it.node_ptr) {
@@ -195,6 +204,9 @@ class SinglyLinkedList {
             return iterator(it.node_ptr->next);
         }
         iterator erase_after(iterator it) {
+            if (it.node_ptr == nullptr || it.node_ptr->next == nullptr) {
+                throw std::out_of_range("Invalid iterator");
+            }
             Node* after = it.node_ptr->next;
             // old tail is removed
             if (tail == after) {
